@@ -1,0 +1,23 @@
+#piece#equipment_type=HOST_SUSE
+#piece##equipment_name#
+hostname
+#piece##equipment_name#
+#piece##equipment_ip#
+ifconfig
+#piece##equipment_ip#
+
+#piece#cm_item_code=#%version#%
+#piece#cm_item_code=#%passwd#%
+#piece#cm_item_code=#%shadow#%
+
+#piece##%version#%
+lsb_release -a
+#piece##%version#%
+
+#piece##%passwd#%
+cat /etc/passwd
+#piece##%passwd#%
+
+#piece##%shadow#%
+cat /etc/shadow
+#piece##%shadow#%

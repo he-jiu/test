@@ -1,0 +1,23 @@
+﻿#piece#equipment_type=DB_ORACLE
+#piece#operation_type=HOST_CENTOS_NETCLOUD
+#piece##equipment_name#
+hostname
+#piece##equipment_name#
+#piece##equipment_ip#
+ifconfig
+#piece##equipment_ip#
+#piece##su - oracle# 
+su - oracle
+bash
+sqlplus  "/as  sysdba"
+#piece##su - oracle# 
+
+#piece#cm_item_code=#%version#%
+#piece#cm_item_code=#%passwd#%
+#piece##%version#%
+select * from v$version;
+#piece##%version#%
+#piece##%passwd#%
+select name,password from sys.user$ where name in (select username from dba_users where account_status='OPEN');
+exit
+#piece##%passwd#%

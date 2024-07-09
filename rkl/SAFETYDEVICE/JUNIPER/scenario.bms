@@ -1,0 +1,19 @@
+#piece#equipment_type=NETDEVICE_JUNIPER_FIREWALL
+#piece##equipment_name#
+get hostname
+#piece##equipment_name#
+#piece##equipment_ip#
+get interface
+#piece##equipment_ip#
+
+#piece#cm_item_code=#%version#%
+#piece#cm_item_code=#%passwd#%
+
+
+#piece##%passwd#%
+get config
+#piece##%passwd#%
+
+#piece##%version#%
+get system
+#piece##%version#%

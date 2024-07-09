@@ -1,0 +1,33 @@
+#piece#equipment_type=HOST_HPUNIX
+#piece##equipment_name#
+hostname
+#piece##equipment_name#
+#piece##equipment_ip#
+netstat -in
+#piece##equipment_ip#
+
+
+#piece#cm_item_code=#%version#%
+#piece#cm_item_code=#%passwd#%
+
+#piece##%version#%
+lsb_release -a
+#piece##%version#%
+
+#piece##%passwd#%
+cat /etc/passwd
+for DIR in `cut -d":" -f1 /etc/passwd`;
+do First=`cat /etc/passwd|grep ^$DIR: |cut -d":" -f1|cut -c 1`;
+if [ -f /tcb/files/auth/$First/$DIR ];
+then cat /tcb/files/auth/$First/$DIR;
+fi
+done;
+#piece##%passwd#%
+
+#piece##%shadow#%
+cat /etc/shadow
+fusr/lbin/getprpw root
+letc/tsconvert -r
+/etc/tsconvert
+cat /usr/sbin/pwconv
+#piece##%shadow#%

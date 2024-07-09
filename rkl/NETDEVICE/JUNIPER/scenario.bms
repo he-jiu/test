@@ -1,0 +1,17 @@
+#piece#equipment_type=NETDEVICE_JUNIPER_SWITCH
+#piece##equipment_name#
+show configuration | grep host-name
+#piece##equipment_name#
+#piece##equipment_ip#
+show configuration | grep address
+#piece##equipment_ip#
+#piece#cm_item_code=#%version#%
+#piece#cm_item_code=#%passwd#%
+
+#piece##%version#%
+show version
+#piece##%version#%
+
+#piece##%passwd#%
+show configuration
+#piece##%passwd#%

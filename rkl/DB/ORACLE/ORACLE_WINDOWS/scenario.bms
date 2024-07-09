@@ -1,0 +1,21 @@
+#piece#equipment_type=DB_ORACLE
+#piece#operation_type=HOST_WINDOWS
+#piece##equipment_name#
+hostname
+#piece##equipment_name#
+#piece##equipment_ip#
+ipconfig
+#piece##equipment_ip#
+#piece##su - oracle#
+sqlplus "/ as sysdba"
+#piece##su - oracle#
+
+#piece#cm_item_id=#%version#%
+#piece#cm_item_id=#%passwd#%
+#piece##%version#%
+select * from v$version;
+#piece##%version#%
+#piece##%passwd#%
+select name,password from sys.user$ where name in (select username from dba_users where account_status='OPEN');
+exit
+#piece##%passwd#%

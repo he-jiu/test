@@ -1,0 +1,17 @@
+#piece#equipment_type=SAFETYDEVICE_HUAWEI_FIREWALL
+#piece##equipment_name#
+ display current-configuration | include sysname
+#piece##equipment_name#
+#piece##equipment_ip#
+ display ip interface brief
+#piece##equipment_ip#
+#piece#cm_item_code=#%version#%
+#piece#cm_item_code=#%passwd#%
+
+#piece##%version#%
+display version
+#piece##%version#%
+#piece##%passwd#%
+display current-configuration
+display snmp-agent community
+#piece##%passwd#%

@@ -1,0 +1,26 @@
+#piece#equipment_type=DB_MYSQL
+#piece#operation_type=HOST_LINUX
+#piece##equipment_name#
+hostname
+#piece##equipment_name#
+#piece##equipment_ip#
+ifconfig
+#piece##equipment_ip#
+#piece##su - mysql#
+cd $INSTALL_PATH/bin
+mysql -u -p
+#piece##su - mysql# 
+
+#piece#cm_item_code=#%version#%
+#piece#cm_item_code=#%passwd#%
+
+#piece##%version#%
+show variables like 'version';
+#piece##%version#%
+
+#piece##%passwd#%
+select user,password from mysql.user;
+select user,authentication_string from mysql.user;
+show variables like 'ssl_key';
+quit;
+#piece##%passwd#%

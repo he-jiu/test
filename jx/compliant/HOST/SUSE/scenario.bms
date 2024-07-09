@@ -1,0 +1,313 @@
+#piece#equipment_type=HOST_SUSE
+#piece##equipment_name#
+hostname
+#piece##equipment_name#
+#piece##equipment_ip#
+ifconfig
+#piece##equipment_ip#
+#piece#cm_item_code=#%SEC-CI-HT-126#%
+#piece#cm_item_code=#%SEC-CI-HT-127#%
+#piece#cm_item_code=#%SEC-CI-HT-128#%
+#piece#cm_item_code=#%SEC-CI-HT-129#%
+#piece#cm_item_code=#%SEC-CI-HT-130#%SEC-CI-HT-133#%
+#piece#cm_item_code=#%SEC-CI-HT-134#%
+#piece#cm_item_code=#%SEC-CI-HT-131#%
+#piece#cm_item_code=#%SEC-CI-HT-132#%
+#piece#cm_item_code=#%SEC-CI-HT-135#%
+#piece#cm_item_code=#%SEC-CI-HT-136#%
+#piece#cm_item_code=#%SEC-CI-HT-137#%
+#piece#cm_item_code=#%SEC-CI-HT-138#%SEC-CI-HT-140#%SEC-CI-HT-143#%
+#piece#cm_item_code=#%SEC-CI-HT-139#%
+#piece#cm_item_code=#%SEC-CI-HT-141#%
+#piece#cm_item_code=#%SEC-CI-HT-142#%
+#piece#cm_item_code=#%SEC-CI-HT-144#%
+#piece#cm_item_code=#%SEC-CI-HT-145#%
+#piece#cm_item_code=#%SEC-CI-HT-146#%
+#piece#cm_item_code=#%SEC-CI-HT-147#%
+#piece#cm_item_code=#%SEC-CI-HT-148#%
+#piece#cm_item_code=#%SEC-CI-HT-149#%
+#piece##%SEC-CI-HT-126#%
+#!/bin/bash
+up_uidmin=`(grep -v ^# /etc/login.defs |grep "^UID_MIN"|awk '($1="UID_MIN"){print $2}')`
+up_uidmax=`(grep -v ^# /etc/login.defs |grep "^UID_MAX"|awk '($1="UID_MAX"){print $2}')`
+egrep -v "oracle|sybase|postgres" /etc/passwd|awk -F: '($3>='$up_uidmin' && $3<='$up_uidmax') {print $1":"$3}'
+echo "result="`egrep -v "oracle|sybase|postgres" /etc/passwd|awk -F: '($3>='$up_uidmin' && $3<='$up_uidmax') {print $1":"$3}'|wc -l`
+#piece##%SEC-CI-HT-126#%
+#piece##%SEC-CI-HT-127#%
+#!/bin/bash
+egrep -w "lp|nobody|uucp|games|rpm|smmsp|nfsnobody" /etc/shadow |awk -F: '($2!~"!") {print $1":"$2}'
+echo "result="`egrep -w "lp|nobody|uucp|games|rpm|smmsp|nfsnobody" /etc/shadow |awk -F: '($2!~"!") {print $1":"$2}'|wc -l`
+#piece##%SEC-CI-HT-127#%
+#piece##%SEC-CI-HT-128#%
+#!/bin/bash
+SSHSTATUS=`netstat -an |grep ":22\>"|wc -l`
+if [ x"$SSHSTATUS" != "x0" ];
+then  if [[ `grep "^PermitRootLogin no" /etc/ssh/sshd_config|wc -l` != 0 ]];
+      then  grep "^PermitRootLogin no" /etc/ssh/sshd_config;
+            echo "This device does not permit root to ssh login,check result:true";
+      else  echo "This device permits root  to ssh login,check result:false" ;
+      fi
+else  echo "The ssh service of device is not running,check result:true";
+fi
+TELSTATUS=`netstat -an |grep ":23\>"|wc -l`
+if [ x"$TELSTATUS" != "x0" ];
+then  if [ -f /etc/securetty ] && [ `grep -i "^pts" /etc/securetty|wc -l` = 0  ];
+       then  echo "This device does not permit root to telnet login,check result:true";
+       else  echo "This device permits root to telnet login,check result:false";
+      fi
+else  echo "The telnet service of device is not running,check result:true" ;
+fi
+#piece##%SEC-CI-HT-128#%
+#piece##%SEC-CI-HT-129#%
+#!/bin/bash
+UP_GIDMIN=`(grep -v ^# /etc/login.defs |grep "^GID_MIN"|awk '($1="GID_MIN") {print $2}')`
+UP_GIDMAX=`(grep -v ^# /etc/login.defs |grep "^GID_MAX"|awk '($1="GID_MAX") {print $2}')`
+egrep -v "oracle|sybase|postgres|daemon|nobody|noaccess" /etc/passwd|awk -F: '($4>='$UP_GIDMIN' && $4<='$UP_GIDMAX') {print $1":"$3":"$4}'
+echo $UP_GIDMIN $UP_GIDMAX
+echo "result="`egrep -v "oracle|sybase|postgres|daemon|nobody|noaccess" /etc/passwd|awk -F: '($4>='$UP_GIDMIN' && $4<='$UP_GIDMAX') {print $1":"$3":"$4}'|wc -l`
+unset UP_GIDMIN UP_GIDMAX
+#piece##%SEC-CI-HT-129#%
+#piece##%SEC-CI-HT-130#%SEC-CI-HT-133#%
+#!/bin/bash
+function Calculate
+{
+  CREDIT=`cat $FILE|egrep -v "^#|^$"|grep -w "credit"|sed 's/^.*credit=//g'|sed 's/\s.*$//g'`
+  DCREDIT=`cat $FILE|egrep -v "^#|^$"|grep -w "dcredit"|sed 's/^.*dcredit=//g'|sed 's/\s.*$//g'`
+  LCREDIT=`cat $FILE|egrep -v "^#|^$"|grep -w "lcredit"|sed 's/^.*lcredit=//g'|sed 's/\s.*$//g'`
+  UCREDIT=`cat $FILE|egrep -v "^#|^$"|grep -w "ucredit"|sed 's/^.*ucredit=//g'|sed 's/\s.*$//g'`
+  OCREDIT=`cat $FILE|egrep -v "^#|^$"|grep -w "ocredit"|sed 's/^.*ocredit=//g'|sed 's/\s.*$//g'`
+  MINCLASS=`cat $FILE|egrep -v "^#|^$"|grep -w "minclass"|sed 's/^.*minclass=//g'|sed 's/\s.*$//g'`
+  MINLEN=`cat $FILE|egrep -v "^#|^$"|grep "minlen"|sed 's/^.*minlen=//g'|sed 's/\s.*$//g'`
+  COUNT=0
+  for NO in $CREDIT $DCREDIT $LCREDIT $UCREDIT $OCREDIT
+  do
+     if ([[ $NO -lt 0 ]]);
+     then COUNT=`expr $COUNT + 1`
+     fi
+  done
+  if ([[ $MINCLASS -ge 2 ]] && [[ $MINLEN -ge 8 ]]);
+     then echo "check result:true"
+          elif ([[ $COUNT -ge 2 ]] && [[ $MINLEN -ge 8 ]]);
+          then echo "check result:true"
+      else echo "check result:false"
+  fi
+  unset CREDIT DCREDIT LCREDIT UCREDIT OCREDIT MINCLASS MINLEN COUNT
+}
+if ([ -f /etc/redhat-release ] &&[ -f /etc/pam.d/system-auth ]);
+then FILE=/etc/pam.d/system-auth
+     cat $FILE |sed '/^#/d'|sed '/^$/d'
+     Calculate
+elif ([ -f /etc/SuSE-release ] && [ -f /etc/pam.d/common-password ] && [ `cat /etc/pam.d/common-password |egrep -i "credit|min|max|passphrase|remember|deny"|wc -l` -gt 0 ] );
+then FILE=/etc/pam.d/common-password
+     cat $FILE|grep -v '^#'|grep -v '^$'
+     Calculate
+elif ([ -f /etc/pam.d/passwd ]);
+then FILE=/etc/pam.d/passwd
+     cat $FILE|grep -v '^#'|grep -v '^$'
+     Calculate
+fi
+#piece##%SEC-CI-HT-130#%SEC-CI-HT-133#%
+#piece##%SEC-CI-HT-134#%
+#!/bin/bash
+if ([ -f /etc/SuSE-release ] && [ -f /etc/pam.d/common-auth ]);
+then 
+cat /etc/pam.d/common-auth |grep -v '^#'|grep -v '^$'
+elif ([ -f /etc/pam.d/common-password ] && [ `cat /etc/pam.d/common-password |egrep -i "credit|min|max|passphrase|remember|deny"|wc -l` -gt 0 ]);
+then
+cat /etc/pam.d/common-password |grep -v '^#'|grep -v '^$';
+elif ([ -f /etc/pam.d/passwd ]);
+then
+cat /etc/pam.d/passwd |grep -v '^#'|grep -v '^$';
+fi
+#piece##%SEC-CI-HT-134#%
+#piece##%SEC-CI-HT-131#%
+cat /etc/login.defs |sed '/^#/d'|sed '/^$/d'
+#piece##%SEC-CI-HT-131#%
+#piece##%SEC-CI-HT-132#%
+echo "result="`egrep "oracle|sybase|postgres" /etc/shadow|awk -F: '($5>180 || $5=="") {printf $0"\\n"}'|wc -l`
+#piece##%SEC-CI-HT-132#%
+#piece##%SEC-CI-HT-135#%
+ls -l /etc/passwd /etc/shadow /etc/group
+#piece##%SEC-CI-HT-135#%
+#piece##%SEC-CI-HT-136#%
+cat /etc/profile|grep -i umask|egrep -i "^umask"
+#piece##%SEC-CI-HT-136#%
+#piece##%SEC-CI-HT-137#%
+#!/bin/bash
+FTPSTATUS=`netstat -antp|grep -i "listen"|grep ":21\>"|wc -l`
+if [ -f /etc/ftpusers ];
+    then FTPUSER="/etc/ftpusers";
+        else FTPUSER="/etc/vsftpd/ftpusers";
+fi;
+if [ $FTPSTATUS = 0 ];
+then echo "FTP is not running.FTP check result=true.";
+else echo "UserResult="`cat $FTPUSER | egrep "^root$|^daemon$|^bin$|^sys$|^adm$|^lp$|^uucp$|^nuucp$|^listen$|^nobody$|^noaccess$|^nobody4$" | wc -l`
+fi
+#piece##%SEC-CI-HT-137#%
+#piece##%SEC-CI-HT-139#%
+ls -l /var/adm|grep pacct
+echo "result="`ls -l /var/adm|grep pacct|wc -l`
+#piece##%SEC-CI-HT-139#%
+#piece##%SEC-CI-HT-141#%
+#!/bin/bash
+
+function Check_SYSLOGD
+
+{
+
+if [ -f  /etc/syslog.conf ];
+
+   then SYSLOGCONF=/etc/syslog.conf;
+
+else SYSLOGCONF=/etc/rsyslog.conf;
+
+fi
+
+cat $SYSLOGCONF |sed '/^#/d'|sed '/^$/d'|awk '($2!~/*/) && ($2!~/-/) {print $1"\t"$2}'
+
+}
+
+function Check_SYSLOGNG
+
+{
+
+SYSLOGCONF=/etc/syslog-ng/syslog-ng.conf
+
+for FILTER in `cat $SYSLOGCONF |grep "^log"|grep filter|cut -d\; -f2|cut -d\( -f2|cut -d\) -f1|sort|uniq`;do
+
+    cat $SYSLOGCONF|grep "^filter $FILTER"
+
+done
+
+for DESTINATION in `cat $SYSLOGCONF |grep "^log"|awk -F\; '{print $1"\n"$2"\n"$3"\n"$4}'|grep destination|cut -d\( -f2|cut -d\) -f1|sort|uniq`;do
+
+    cat $SYSLOGCONF|grep -A6 "^destination $DESTINATION "|grep "udp"
+
+done
+
+cat $SYSLOGCONF |grep "^log"
+
+}
+
+if [[ `ps -ef|egrep '(syslogd|syslog-ng)'|grep -v "grep"|wc -l` != 0 ]];
+
+   then if [[ `grep -sv "^#" /etc/sysconfig/syslog|grep SYSLOG_DAEMON|cut -d\" -f2` = "syslog-ng" ]];
+
+           then Check_SYSLOGNG;
+
+           else Check_SYSLOGD;
+
+        fi;
+
+   else echo "syslog is not running";
+
+fi
+#piece##%SEC-CI-HT-141#%
+#piece##%SEC-CI-HT-138#%SEC-CI-HT-140#%SEC-CI-HT-143#%
+#!/bin/bash
+
+function Check_SYSLOGD
+
+{
+
+if [ -f  /etc/syslog.conf ];
+
+   then SYSLOGCONF=/etc/syslog.conf;
+
+else SYSLOGCONF=/etc/rsyslog.conf;
+
+fi
+
+cat $SYSLOGCONF |sed '/^#/d'|sed '/^$/d'|awk '($2!~/*/) && ($2!~/-/) {print $1"\t"$2}'
+
+}
+
+function Check_SYSLOGNG
+
+{
+
+SYSLOGCONF=/etc/syslog-ng/syslog-ng.conf
+
+for FILTER in `cat $SYSLOGCONF |grep "^log"|grep filter|cut -d\; -f2|cut -d\( -f2|cut -d\) -f1|sort|uniq`;do
+
+    cat $SYSLOGCONF|grep "^filter $FILTER"
+
+done
+
+for DESTINATION in `cat $SYSLOGCONF |grep "^log"|awk -F\; '{print $1"\n"$2"\n"$3"\n"$4"}'|grep destination|cut -d\( -f2|cut -d\) -f1|sort|uniq`;do
+
+    cat $SYSLOGCONF|grep -A6 "^destination $DESTINATION "|grep "udp"
+
+done
+
+cat $SYSLOGCONF |grep "^log"
+
+}
+
+if [[ `ps -ef|egrep '(syslogd|syslog-ng)'|grep -v "grep"|wc -l` != 0 ]];
+
+   then if [[ `grep -sv "^#" /etc/sysconfig/syslog|grep SYSLOG_DAEMON|cut -d\" -f2` = "syslog-ng" ]];
+
+           then Check_SYSLOGNG;
+
+           else Check_SYSLOGD;
+
+        fi;
+
+   else echo "syslog is not running";
+
+fi
+#piece##%SEC-CI-HT-138#%SEC-CI-HT-140#%SEC-CI-HT-143#%
+#piece##%SEC-CI-HT-142#%
+#!/bin/bash
+RSYSLOGD_STATUS=`ps -ef |grep rsyslogd|grep -v "grep rsyslogd"|wc -l`
+SYSLOGD_STATUS=`ps -ef |grep syslogd|grep -v "grep syslogd"|wc -l`
+SYSLOGNG_STATUS=`ps -ef |grep "/syslog-ng"|grep -v "grep /syslog-ng"|wc -l`
+if [[ $RSYSLOGD_STATUS != 0 ]];
+    then LOGDIR=`cat /etc/rsyslog.conf|grep -v "@"|grep -v "^#" |grep -v "^\$"|grep "/var" |grep -v "\-\/"|awk '{print$2}' |cut -c1-8 |uniq -f0`;
+    for f in `cat /etc/rsyslog.conf|grep -v "@"|grep -v "^#" |grep -v "^\$"|grep "/var" |grep -v "\-\/"|awk '{print$2}'`
+    do
+            echo `ls -al $f`;
+    done;
+    elif [[ $SYSLOGD_STATUS != 0 ]];
+         then LOGDIR=`cat /etc/syslog.conf |sed '/^#/d' |sed '/^$/d' |awk '(($2!~/@/) && ($2!~/*/) && ($2!~/-/)) {print $2}'`;
+              ls -l $LOGDIR;
+    elif [[ $SYSLOGNG_STATUS != 0 ]];
+         then LOGDIR=`cat /etc/syslog-ng/syslog-ng.conf|grep "^destination"|grep file|cut -d\" -f2`;
+              ls -l $LOGDIR;
+    else echo "syslog is not running.";
+fi
+#piece##%SEC-CI-HT-142#%
+#piece##%SEC-CI-HT-144#%
+#!/bin/bash
+if [[ `ps -ef|egrep '(syslogd|syslog-ng)'|grep -v "grep"|wc -l` != 0 ]]; then
+    if [ -f  /etc/syslog.conf ]; then
+        cat /etc/syslog.conf |grep -v "^#" |grep -v '^$/d'|grep cron;
+    elif [ -f  /etc/syslog-ng/syslog-ng.conf ]; then
+        cat /etc/syslog-ng/syslog-ng.conf |grep -v "^#" |sed '/^$/d'|grep cron;
+    elif [ -f  /etc/rsyslog.conf ]; then
+        cat /etc/rsyslog.conf |grep -v "^#" |grep -v '^$/d'|grep cron;
+    fi
+else
+    echo "syslog is not running";
+fi
+#piece##%SEC-CI-HT-144#%
+#piece##%SEC-CI-HT-145#%
+echo "telnet_status="`netstat -an|grep ":23\>"|grep -i listen|wc -l`
+echo "ssh_status="`netstat -an|grep ":22\>"|grep -i listen|wc -l`
+#piece##%SEC-CI-HT-145#%
+#piece##%SEC-CI-HT-147#%
+rpm -qa |egrep "gcc|gcc3|gcc3-c++| gcc3-g77|gcc3-java|gcc3-objc|gcc-c++|gcc-chill| gcc-g77|gcc-java|gcc-objc|bin86|dev86|nasm" |egrep -v "gcc|bin"
+echo "result="`rpm -qa |egrep "gcc|gcc3|gcc3-c++| gcc3-g77|gcc3-java|gcc3-objc|gcc-c++|gcc-chill| gcc-g77|gcc-java|gcc-objc|bin86|dev86|nasm" |egrep -v "gcc|bin" |wc -l`
+#piece##%SEC-CI-HT-147#%
+#piece##%SEC-CI-HT-146#%
+cat /etc/ssh/sshd_config |grep -v "^#" |grep -v '^$'|grep -i Protocol
+#piece##%SEC-CI-HT-146#%
+#piece##%SEC-CI-HT-148#%
+cat /etc/ssh/sshd_config|grep -v "^#"|grep -v '^$'
+#piece##%SEC-CI-HT-148#%
+#piece##%SEC-CI-HT-149#%
+cat /etc/sysctl.conf | grep -v '^#'| grep -v '^$'
+echo "accept_redirects="`(sysctl -n net.ipv4.conf.all.accept_redirects)`
+echo "accept_source_route"=`(sysctl -n net.ipv4.conf.all.accept_source_route)`
+#piece##%SEC-CI-HT-149#%

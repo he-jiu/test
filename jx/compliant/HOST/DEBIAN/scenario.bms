@@ -1,0 +1,348 @@
+#piece#equipment_type=HOST_DEBIAN
+#piece##equipment_name#
+hostname
+#piece##equipment_name#
+#piece##equipment_ip#
+ifconfig
+#piece##equipment_ip#
+#piece#cm_item_code=#%SEC-CI-HT-4231#%
+#piece#cm_item_code=#%SEC-CI-HT-4240#%SEC-CI-HT-4233#%
+#piece#cm_item_code=#%SEC-CI-HT-4255#%
+#piece#cm_item_code=#%SEC-CI-HT-4253#%
+#piece#cm_item_code=#%SEC-CI-HT-4228#%
+#piece#cm_item_code=#%SEC-CI-HT-4238#%
+#piece#cm_item_code=#%SEC-CI-HT-4246#%
+#piece#cm_item_code=#%SEC-CI-HT-4224#%
+#piece#cm_item_code=#%SEC-CI-HT-4252#%
+#piece#cm_item_code=#%SEC-CI-HT-4232#%
+#piece#cm_item_code=#%SEC-CI-HT-4245#%
+#piece#cm_item_code=#%SEC-CI-HT-4247#%
+#piece#cm_item_code=#%SEC-CI-HT-4225#%
+#piece#cm_item_code=#%SEC-CI-HT-4226#%
+#piece#cm_item_code=#%SEC-CI-HT-4227#%
+#piece#cm_item_code=#%SEC-CI-HT-4236#%
+#piece#cm_item_code=#%SEC-CI-HT-4237#%
+#piece#cm_item_code=#%SEC-CI-HT-4243#%
+#piece#cm_item_code=#%SEC-CI-HT-4244#%
+#piece#cm_item_code=#%SEC-CI-HT-4229#%
+#piece#cm_item_code=#%SEC-CI-HT-4230#%
+#piece#cm_item_code=#%SEC-CI-HT-4234#%
+#piece#cm_item_code=#%SEC-CI-HT-4235#%
+#piece#cm_item_code=#%SEC-CI-HT-4239#%
+#piece#cm_item_code=#%SEC-CI-HT-4242#%
+#piece#cm_item_code=#%SEC-CI-HT-4248#%
+#piece#cm_item_code=#%SEC-CI-HT-4249#%
+#piece#cm_item_code=#%SEC-CI-HT-4254#%
+#piece#cm_item_code=#%SEC-CI-HT-4257#%
+#piece#cm_item_code=#%SEC-CI-HT-4258#%
+
+#piece##%SEC-CI-HT-4231#%
+#!/bin/bash
+up_gidmin=`(grep -v ^# /etc/login.defs |grep "^GID_MIN"|awk '($1="GID_MIN") {print $2}')`
+up_gidmax=`(grep -v ^# /etc/login.defs |grep "^GID_MAX"|awk '($1="GID_MAX") {print $2}')`
+egrep -v "oracle|sybase|postgres" /etc/passwd|awk -F: '($4>='$up_gidmin' && $4<='$up_gidmax') {print $1":"$3":"$4}'
+echo "gidmin:$up_gidmin gidmax:$up_gidmax"
+echo "result="`egrep -v "oracle|sybase|postgres" /etc/passwd|awk -F: '($4>='$up_gidmin' && $4<='$up_gidmax') {print $1":"$3":"$4}'|wc -l`
+unset up_gidmin upgidmax
+#piece##%SEC-CI-HT-4231#%
+
+#piece##%SEC-CI-HT-4240#%SEC-CI-HT-4233#%
+#!/bin/bash
+function Check_SYSLOGD
+{
+SYSLOGCONF=/etc/syslog.conf
+cat $SYSLOGCONF |sed '/^#/d'|sed '/^$/d'|awk '($2!~/*/) && ($2!~/-/) {print $1"\t"$2}'
+}
+function Check_SYSLOGNG
+{
+SYSLOGCONF=/etc/syslog-ng/syslog-ng.conf
+for FILTER in `cat $SYSLOGCONF |grep "^log"|grep filter|cut -d\; -f2|cut -d\( -f2|cut -d\) -f1|sort|uniq`;do
+    cat $SYSLOGCONF|grep "^filter $FILTER"
+done
+for DESTINATION in `cat $SYSLOGCONF |grep "^log"|awk -F\; '{print $1"\n"$2"\n"$3}'|grep destination|cut -d\( -f2|cut -d\) -f1|sort|uniq`;do
+    cat $SYSLOGCONF|grep "^destination $DESTINATION "
+done
+cat $SYSLOGCONF |grep "^log"
+}
+
+function Check_RSYSLOGD
+{
+SYSLOGCONF=/etc/rsyslog.conf
+cat $SYSLOGCONF |sed '/^#/d'|sed '/^$/d'|awk '($2!~/\*/) && ($2!~/-/) {print $1"\t"$2}'
+}
+
+syslogngnum=`ps -ef|grep syslog|grep -v "grep syslog"|wc -l`
+
+syslog_flag=`grep -v "^#" /etc/sysconfig/syslog|grep SYSLOG_DAEMON|cut -d\" -f2`
+rsyslognum=`ps -ef|grep rsyslog|grep -v "grep rsyslog"|wc -l`
+echo "-----------------------------------------------------------------"
+if [ $syslogngnum != 0 ];
+   then 
+        if [ $rsyslognum != 0 ];then 
+                Check_RSYSLOGD;
+        elif [ syslog_flag = "syslog-ng"  ];then 
+                Check_RSYSLOGNG;
+        else
+                Check_SYSLOGD;
+        fi;
+   else echo "syslog is not running";
+fi
+#piece##%SEC-CI-HT-4240#%SEC-CI-HT-4233#%
+
+#piece##%SEC-CI-HT-4253#%
+cat /etc/inetd.conf |sed '/^#/d'|sed '/^$/d'|egrep -w "time|echo|discard|daytime|chargen|fs|dtspc|exec|comsat|talk|finger|uucp|name|xaudio|netstat|ufsd|rexd|systat|sun-dr|uuidgen|krb5_prop"
+echo "result="`cat /etc/inetd.conf |sed '/^#/d'|sed '/^$/d'|egrep -w "time|echo|discard|daytime|chargen|fs|dtspc|exec|comsat|talk|finger|uucp|name|xaudio|netstat|ufsd|rexd|systat|sun-dr|uuidgen|krb5_prop"|wc -l`
+#piece##%SEC-CI-HT-4253#%
+
+#piece##%SEC-CI-HT-4228#%
+permitEmptyPasswd=`cat /etc/ssh/sshd_config |grep -v "^#"|grep PermitEmptyPasswords`
+echo "$permitEmptyPasswd"
+permitListen=`cat /etc/ssh/sshd_config |grep -v "^#" |grep Listen`
+echo "$permitListen"
+unset permitEmptyPasswd;
+unset permitListen;
+#piece##%SEC-CI-HT-4228#%
+
+#piece##%SEC-CI-HT-4238#%
+LANG=c
+echo "idle_activation_enabled="`gconftool-2 -g /apps/gnome-screensaver/idle_activation_enabled`
+echo "lock_enabled="`gconftool-2 -g /apps/gnome-screensaver/lock_enabled`
+echo "mode="`gconftool-2 -g /apps/gnome-screensaver/mode`
+echo "idle_delay="`gconftool-2 -g /apps/gnome-screensaver/idle_delay`
+#piece##%SEC-CI-HT-4238#%
+
+#piece##%SEC-CI-HT-4246#%
+cat /etc/sysctl.conf | grep -v '^#'| grep -v '^$'
+echo "accept_redirects="`(sysctl -n net.ipv4.conf.all.accept_redirects)`
+echo "accept_source_route"=`(sysctl -n net.ipv4.conf.all.accept_source_route)`
+#piece##%SEC-CI-HT-4246#%
+
+#piece##%SEC-CI-HT-4224#%
+cat /etc/login.defs | grep -v "^#" | grep LOGIN_RETRIES
+#piece##%SEC-CI-HT-4224#%
+
+#piece##%SEC-CI-HT-4252#%
+uname -a
+cat /etc/os-release
+echo "redhat patch check result:true";
+#piece##%SEC-CI-HT-4252#%
+
+#piece##%SEC-CI-HT-4232#%
+ls -l /etc/passwd /etc/shadow /etc/group
+#piece##%SEC-CI-HT-4232#%
+#piece##%SEC-CI-HT-4245#%
+cat /etc/default/cron | grep -v "^#" | grep "CRONLOG"
+#piece##%SEC-CI-HT-4245#%
+
+#piece##%SEC-CI-HT-4247#%
+cat /etc/sysctl.conf | grep -v '^#'| grep -v '^$'
+echo "accept_redirects="`(sysctl -n net.ipv4.conf.all.accept_redirects)`
+echo "accept_source_route"=`(sysctl -n net.ipv4.conf.all.accept_source_route)`
+#piece##%SEC-CI-HT-4247#%
+
+#piece##%SEC-CI-HT-4225#%
+cat /etc/login.defs |sed '/^#/d'|sed '/^$/d'
+#piece##%SEC-CI-HT-4225#%
+
+#piece##%SEC-CI-HT-4226#%
+#!/bin/bash
+up_uidmin=`(grep -v ^# /etc/login.defs |grep "^UID_MIN"|awk '($1="UID_MIN"){print $2}')`
+up_uidmax=`(grep -v ^# /etc/login.defs |grep "^UID_MAX"|awk '($1="UID_MAX"){print $2}')`
+egrep -v "oracle|sybase|postgres" /etc/passwd|awk -F: '($3>='$up_uidmin' && $3<='$up_uidmax') {print $1":"$3}'
+echo "result="`egrep -v "oracle|sybase|postgres" /etc/passwd|awk -F: '($3>='$up_uidmin' && $3<='$up_uidmax') {print $1":"$3}'|wc -l`
+#piece##%SEC-CI-HT-4226#%
+
+#piece##%SEC-CI-HT-4227#%
+egrep -w "listen|gdm|webservd|nobody|nobody4|noaccess" /etc/shadow |awk -F: '($2!~"!") {print $1":"$2}'
+echo "result="`egrep -w "listen|gdm|webservd|nobody|nobody4|noaccess" /etc/shadow |awk -F: '($2!~"!") {print $1":"$2}'|wc -l`
+#piece##%SEC-CI-HT-4227#%
+
+#piece##%SEC-CI-HT-4236#%
+#!/bin/bash
+telnet_port=`cat /etc/services | grep -w "^telnet" | awk '{print $2}' | awk -F/ 'NR==1{print $1}'`
+ssh_port=`cat /etc/ssh/sshd_config | grep -w "^Port" | awk 'NR==1{print $2}'`
+if [[ $telnet_port == "" ]];then
+     telnet_port = 23;
+fi
+if [[ $ssh_port == "" ]];then 
+      ssh_port="22";
+fi
+echo "telnet_status="`netstat -an|grep ":$telnet_port"|grep -i listen|wc -l`;
+echo "ssh_status="`netstat -an|grep ":$ssh_port"|grep -i listen|wc -l`;
+
+#piece##%SEC-CI-HT-4236#%
+
+#piece##%SEC-CI-HT-4237#%
+cat /etc/profile | grep -v "^#" | grep "TMOUT"
+#piece##%SEC-CI-HT-4237#%
+
+#piece##%SEC-CI-HT-4243#%
+#!/bin/bash
+result=0;
+if ([ -f /etc/shadow ]);
+then 
+        echo "System is not trusted./etc/shadow exist.";
+        egrep "postgres|oracle|sybase" /etc/shadow|awk -F: '($5>180 || $5=="") {printf $0"\n"}';
+        echo "result="`egrep "postgres|oracle|sybase" /etc/shadow|awk -F: '($5>180 || $5=="") {printf $0"\n"}'|wc -l`;
+elif ([ -d /tcb ]);##tcb the alternative to /etc/shadow
+then
+        for user in postgres oracle sybase;
+        do 
+                echo $user","`/usr/lbin/getprpw -l -m exptm $user`;
+                exptm=`/usr/lbin/getprpw -m exptm $user|cut -d= -f2`;
+                if [ "$exptm" -gt "180" ] || [ "$exptm" -eq "-1" ];
+                then 
+                        result=`expr $result + 1`;
+                else 
+                        result=$result;
+                fi;
+        done;
+        echo "System is trusted.";
+        echo "result=$result";
+else 
+        echo "System is not trusted./etc/shadow not exist.";
+        echo "result=2";
+fi
+unset result exptm user;
+#piece##%SEC-CI-HT-4243#%
+
+#piece##%SEC-CI-HT-4244#%
+cat /etc/rsyslog.conf | grep -v "^#" | grep "auth"
+cat /etc/login.defs | grep -v "^#" | grep SYSLOG_SU_ENAB
+#piece##%SEC-CI-HT-4244#%
+
+#piece##%SEC-CI-HT-4229#%
+#!/bin/bash
+telnet_port=`cat /etc/services | grep -w "^telnet" | awk '{print $2}' | awk -F/ 'NR==1{print $1}'`
+if [[ $telnet_port == "" ]];
+then
+    telnet_port = 23;
+fi
+ssh_port=`cat /etc/ssh/sshd_config | grep -w "^Port" | awk 'NR==1{print $2}'`
+if [[ $ssh_port == "" ]];
+then 
+    ssh_port="22";
+fi
+SSHSTATUS=`netstat -an|grep ":$ssh_port>"|grep -i listen|wc -l`
+if [ x"$SSHSTATUS" != "x0" ];
+then  if [[ `grep "^PermitRootLogin no" /etc/ssh/sshd_config|wc -l` != 0 ]];
+      then  grep "^PermitRootLogin no" /etc/ssh/sshd_config;
+            echo "This device does not permit root to ssh login,check result:true";
+      else  echo "This device permits root to ssh login,check result:false" ;
+      fi
+else  echo "The ssh service of device is not running,check result:true";
+fi
+TELSTATUS=`netstat -an|grep ":$telnet_port>"|grep -i listen|wc -l`
+if [ x"$TELSTATUS" != "x0" ];
+then  if ([ -f /etc/securetty ] && [ `grep -i "^pts" /etc/securetty|wc -l` = 0  ]);
+       then  echo "This device does not permit root to telnet login,check result:true";
+       else  echo "This device permits root to telnet login,check result:false";
+      fi
+else  echo "The telnet service of device is not running,check result:true" ;
+fi
+unset telnet_port
+unset ssh_port
+#piece##%SEC-CI-HT-4229#%
+
+#piece##%SEC-CI-HT-4230#%
+cat /etc/login.defs | grep -v "^#" | grep PASS_MIN_LEN
+#piece##%SEC-CI-HT-4230#%
+
+#piece##%SEC-CI-HT-4234#%
+ls -l /var/adm|grep pacct
+echo "result="`ls -l /var/adm|grep pacct|wc -l`
+#piece##%SEC-CI-HT-4234#%
+
+#piece##%SEC-CI-HT-4235#%
+cat /etc/rsyslog.conf | grep -v "^#" | grep -v "^$/d" | grep "@"
+#piece##%SEC-CI-HT-4235#%
+
+#piece##%SEC-CI-HT-4239#%
+cat /etc/hosts.allow |sed '/^#/d'|sed '/^$/d'|egrep -i "sshd|telnet|all"|egrep -v "all:all"
+
+cat /etc/hosts.deny |sed '/^#/d'|sed '/^$/d'|egrep -i "sshd|telnet|all"
+
+echo "allowno="`egrep -i "sshd|telnet|all" /etc/hosts.allow |egrep -v "all:all"|sed '/^#/d'|sed '/^$/d'|wc -l`
+
+echo "denyno="`egrep -i "ssh|telnet|all" /etc/hosts.deny |sed '/^#/d'|sed '/^$/d'|wc -l`
+#piece##%SEC-CI-HT-4239#%
+
+#piece##%SEC-CI-HT-4242#%
+#!/bin/bash
+SYSLOGNG_STATUS=`ps -ef |grep "/syslog-ng"|grep -v "grep /syslog-ng"|wc -l`;
+RSYSLOGD_STATUS=`ps -ef |grep "rsyslog"|grep -v "grep rsyslog"|wc -l`;
+if [[ $SYSLOGNG_STATUS != 0 ]];
+         then LOGDIR=`cat /etc/syslog-ng/syslog-ng.conf|grep "^destination"|grep file|cut -d" -f2`;
+        ls -l $LOGDIR;
+elif [[ $RSYSLOGD_STATUS != 0 ]];
+         #then LOGDIR=`cat /etc/rsyslog.conf|grep -v "@"|grep file|cut -d" -f2`;
+         then LOGDIR=`cat /etc/rsyslog.conf|grep -v "@"|grep -v "^#" |grep -v "^$"|grep "/var" |grep -v "-"|awk '{print$2}' |cut -c1-8 |uniq -f0`;
+#               ls -l $LOGDIR;
+        for f in `cat /etc/rsyslog.conf|grep -v "@"|grep -v "^#" |grep -v "^$"|grep "/var" |grep -v "-"|awk '{print$2}'`
+        do
+                echo `ls -al $f`;
+        done;
+else
+        echo "syslog is not running.";
+fi
+
+#piece##%SEC-CI-HT-4242#%
+
+#piece##%SEC-CI-HT-4248#%
+ls -al /etc/init.d/*
+#piece##%SEC-CI-HT-4248#%
+
+#piece##%SEC-CI-HT-4249#%
+#!/bin/bash
+FTPSTATUS=`netstat -antp|grep -i "listen"|grep ":21\>"|wc -l`
+if [ $FTPSTATUS = 0 ];
+     then  echo "FTP is not running.FTP check result:true.";
+else
+     cat /etc/vsftpd.conf | grep -v "^#" | grep chroot_local_user
+fi
+#piece##%SEC-CI-HT-4249#%
+
+#piece##%SEC-CI-HT-4254#%
+#!/bin/bash
+ntpstatus=`ps -ef|grep ntp|grep -v grep|wc -l`
+if [ $ntpstatus != 0 ];
+    then  grep -v "^#" /etc/default/ntpdate|grep -i "NTPDATE_USE_NTP_CONF=yes";
+	  echo "ntpserverno="`grep -v "^#" /etc/default/ntpdate|grep -i "NTPDATE_USE_NTP_CONF=yes"|wc -l`;
+    else  crontab -l|grep -v "^#"|grep ntp;
+	  echo "ntpserverno="`crontab -l|grep -v "^#"|grep ntp|wc -l`;
+fi
+unset ntpstatus;
+#piece##%SEC-CI-HT-4254#%
+
+#piece##%SEC-CI-HT-4257#%
+ls /etc/rc2.d/* /etc/rc3.d/* /etc/rc4.d/* /etc/rc5.d/*|egrep "lp|rpc|snmpdx|keyserv|nscd|Volmgt|uucp|dmi|sendmail|autoinstall"|grep "^S"
+echo "result="`ls /etc/rc2.d/* /etc/rc3.d/* /etc/rc4.d/* /etc/rc5.d/*|egrep "lp|rpc|snmpdx|keyserv|nscd|Volmgt|uucp|dmi|sendmail|autoinstall"|grep "^S"|wc -l`
+#piece##%SEC-CI-HT-4257#%
+
+#piece##%SEC-CI-HT-4258#%
+env x='() { :;}; echo vulnerable' bash -c "echo this is a test"
+#piece##%SEC-CI-HT-4258#%
+
+#piece##%SEC-CI-HT-4255#%
+#!/bin/bash
+chkconfig --list |grep nfs
+ps -ef |grep nfs|egrep "lockd|statd|nfsd|mountd"|egrep -v "egrep|grep"
+NFSSTATUS=`ps -ef |grep nfs|egrep "lockd|statd|nfsd|mountd"|egrep -v "egrep|grep"|wc -l`
+NFSAllowNo=`egrep -i "nfs" /etc/hosts.allow |sed '/^#/d'|sed '/^$/d'|wc -l`
+if [ $NFSSTATUS = 0 ];then
+   echo "NFS services online:$NFSSTATUS";
+   echo "Numbers in hosts.allow:$NFSAllowNo";
+   echo "NFS check result:true";
+else     
+    if [ $NFSAllowNo != 0 ];then 
+        echo "NFS services online:$NFSSTATUS";
+        echo "Numbers in hosts.allow:$NFSAllowNo";
+        echo "NFS check result:true";
+   else 
+        echo "NFS services online:$NFSSTATUS";
+        echo "Numbers in hosts.allow:$NFSAllowNo";
+        echo "NFS check result:false";
+     fi;
+fi;
+unset NFSSTATUS NFSAllowNo
+#piece##%SEC-CI-HT-4255#%

@@ -1,0 +1,22 @@
+#piece#equipment_type=NETDEVICE_HUAWEI_SWITCH
+#piece##equipment_name#
+ display current-configuration | include sysname
+#piece##equipment_name#
+#piece##equipment_ip#
+display ip interface brief
+#piece##equipment_ip#
+#piece##router_info#
+#piece##dis ip interface brief#
+ dis ip interface brief
+#piece##dis ip interface brief#
+#piece##router_info#
+#piece#cm_item_code=#%version#%
+#piece#cm_item_code=#%passwd#%
+
+#piece##%version#%
+ display version
+#piece##%version#%
+#piece##%passwd#%
+ display current-configuration
+ display snmp-agent community
+#piece##%passwd#%

@@ -1,0 +1,16 @@
+#piece#equipment_type=NETDEVICE_CISCO_FIREWALL
+#piece##equipment_name#
+show running-config | include hostname
+#piece##equipment_name#
+#piece##equipment_ip#
+show ip address
+#piece##equipment_ip#
+#piece#cm_item_code=#%version#%
+#piece#cm_item_code=#%passwd#%
+
+#piece##%passwd#%
+show running-config
+#piece##%passwd#%
+#piece##%version#%
+show version
+#piece##%version#%

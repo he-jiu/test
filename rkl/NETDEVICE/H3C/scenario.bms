@@ -1,0 +1,15 @@
+#piece#equipment_type=NETDEVICE_H3C_SWITCH
+#piece##equipment_name#
+display device manuinfo
+#piece##equipment_name#
+#piece##equipment_ip#
+display ip interface brief
+#piece##equipment_ip#
+#piece#cm_item_code=#%version#%
+#piece#cm_item_code=#%passwd#%
+#piece##%passwd#%
+display current-configuration configuration local-user
+#piece##%passwd#%
+#piece##%version#%
+show version
+#piece##%version#%

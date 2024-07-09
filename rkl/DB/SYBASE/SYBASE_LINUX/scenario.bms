@@ -1,0 +1,25 @@
+﻿#piece#equipment_type=DB_SYBASE
+#piece#operation_type=HOST_LINUX
+#piece##equipment_name#
+hostname
+#piece##equipment_name#
+#piece##equipment_ip#
+ifconfig
+#piece##equipment_ip#
+#piece##su - sa#
+su - $SYBASEUSER
+cd $INSTALL_PATH/bin
+isql -U
+#piece##su - sa# 
+
+#piece#cm_item_code=#%version#%
+#piece#cm_item_code=#%passwd#%
+#piece##%passwd#%
+select name,password from syslogins
+GO
+#piece##%passwd#%
+#piece##%version#%
+select @@version
+GO
+exit
+#piece##%version#%

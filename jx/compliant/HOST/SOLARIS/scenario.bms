@@ -1,0 +1,320 @@
+#piece#equipment_type=HOST_SOLARIS
+#piece##equipment_name#
+hostname
+#piece##equipment_name#
+#piece##equipment_ip#
+ifconfig -a
+#piece##equipment_ip#
+#piece#cm_item_code=#%SEC-CI-HT-52#%
+#piece#cm_item_code=#%SEC-CI-HT-53#%
+#piece#cm_item_code=#%SEC-CI-HT-54#%
+#piece#cm_item_code=#%SEC-CI-HT-500#%
+#piece#cm_item_code=#%SEC-CI-HT-59#%SEC-CI-HT-60#%SEC-CI-HT-58#%
+#piece#cm_item_code=#%SEC-CI-HT-55#%
+#piece#cm_item_code=#%SEC-CI-HT-61#%
+#piece#cm_item_code=#%SEC-CI-HT-56#%
+
+#piece#cm_item_code=#%SEC-CI-HT-57#%
+#piece#cm_item_code=#%SEC-CI-HT-501#%
+#piece#cm_item_code=#%SEC-CI-HT-502#%
+#piece#cm_item_code=#%SEC-CI-HT-503#%SEC-CI-HT-504#%SEC-CI-HT-62#%
+#piece#cm_item_code=#%SEC-CI-HT-64#%
+#piece#cm_item_code=#%SEC-CI-HT-505#%
+#piece#cm_item_code=#%SEC-CI-HT-63#%
+#piece#cm_item_code=#%SEC-CI-HT-65#%
+
+#piece#cm_item_code=#%SEC-CI-HT-506#%
+#piece#cm_item_code=#%SEC-CI-HT-507#%SEC-CI-HT-508#%
+#piece#cm_item_code=#%SEC-CI-HT-72#%
+#piece#cm_item_code=#%SEC-CI-HT-509#%
+#piece#cm_item_code=#%SEC-CI-HT-510#%
+
+#piece#cm_item_code=#%SEC-CI-HT-66#%
+#piece#cm_item_code=#%SEC-CI-HT-511#%
+#piece#cm_item_code=#%SEC-CI-HT-67#%
+#piece#cm_item_code=#%SEC-CI-HT-512#%
+#piece#cm_item_code=#%SEC-CI-HT-513#%
+#piece#cm_item_code=#%SEC-CI-HT-74#%
+#piece#cm_item_code=#%SEC-CI-HT-514#%
+#piece#cm_item_code=#%SEC-CI-HT-68#%
+#piece#cm_item_code=#%SEC-CI-HT-71#%
+
+#piece#cm_item_code=#%SEC-CI-HT-73#%
+
+#piece#cm_item_code=#%SEC-CI-HT-515#%
+
+#piece##%SEC-CI-HT-67#%
+#!/bin/sh
+if ([ `uname -r|cut -d. -f2` = 10 ]);
+  then inetadm|egrep "time|echo|discard|daytime|chargen|/fs:|dtspc|/exec|comsat|talk|finger|uucp|/name|
+  xaudio|netstat|ufsd|rexd|systat|sun-dr|uuidgen|krb5_prop"|grep online
+     echo "result="`inetadm |egrep "time|echo|discard|daytime|chargen|/fs:|dtspc|/exec|comsat|talk|finger|uucp|/name|xaudio
+     |netstat|ufsd|rexd|systat|sun-dr|uuidgen|krb5_prop"|grep online|wc -l`
+  else cat /etc/inet/inetd.conf|sed '/^#/d'|sed '/^$/d'|egrep "time|echo|discard|daytime|chargen|fs:|dtspc|/exec|comsat|talk|finger|uucp
+  |name|xaudio|netstat|ufsd|rexd|systat|sun-dr|uuidgen|krb5_prop"
+    echo "result="`cat /etc/inet/inetd.conf|sed '/^#/d'|sed '/^$/d'|egrep "time|echo|discard|daytime|chargen|fs:|dtspc|/exec|comsat|talk|finger
+    |uucp|name|xaudio|netstat|ufsd|rexd|systat|sun-dr|uuidgen|krb5_prop"|wc -l`
+fi
+#piece##%SEC-CI-HT-67#%
+#piece##%SEC-CI-HT-514#%
+ls /etc/rc2.d /etc/rc3.d|egrep "^S[0-9]{1,3}lp?|^S[0-9]{1,3}rpc?|^S[0-9]{1,3}snmpdx?|^S[0-9]{1,3}keyserv?|^S[0-9]{1,3}nscd?|^S[0-9]{1,3}Volmgt?|^S[0-9]{1,3}uucp?|^S[0-9]{1,3}dmi?|^S[0-9]{1,3}sendmail?|^S[0-9]{1,3}autoinstall?";
+result=`ls /etc/rc2.d /etc/rc3.d|egrep "^S[0-9]{1,3}lp?|^S[0-9]{1,3}rpc?|^S[0-9]{1,3}snmpdx?|^S[0-9]{1,3}keyserv?|^S[0-9]{1,3}nscd?|^S[0-9]{1,3}Volmgt?|^S[0-9]{1,3}uucp?|^S[0-9]{1,3}dmi?|^S[0-9]{1,3}sendmail?|^S[0-9]{1,3}autoinstall?"|wc -l`;
+echo "result="$result;
+unset result;
+#piece##%SEC-CI-HT-514#%
+#piece##%SEC-CI-HT-63#%
+grep "^CRONLOG=YES" /etc/default/cron
+ls -l /var/cron/log
+echo "result="`egrep "^CRONLOG=YES" /etc/default/cron|wc -l`
+#piece##%SEC-CI-HT-63#%
+#piece##%SEC-CI-HT-61#%
+cat /etc/user_attr |sed '/^#/d'|sed '/^$/d'
+cat /etc/security/policy.conf |sed '/^#/d'|sed '/^$/d'
+cat /etc/default/login |sed '/^#/d'|sed '/^$/d'
+#piece##%SEC-CI-HT-61#%
+#piece##%SEC-CI-HT-502#%
+echo "result="`ls -l /var/adm|grep pacct|wc -l`;
+ls -l /var/adm|grep pacct
+#piece##%SEC-CI-HT-502#%
+#piece##%SEC-CI-HT-72#%
+cat /etc/profile |grep -v "^#"|grep -i "TMOUT"
+cat /etc/default/login |grep -v "^#"|grep -i "TIMEOUT"
+#piece##%SEC-CI-HT-72#%
+#piece##%SEC-CI-HT-509#%
+locale
+cat /usr/dt/config/`locale |grep LC_CTYPE|sed 's/"//g'|cut -d = -f2`/sys.resources |egrep -i "^dtsession\*saverTimeout:|^dtsession\*lockTimeout:"
+cat /usr/openwin/lib/app-defaults/XScreenSaver |egrep  -i "^\*timeout:|^\*locktimeout:|^\*lock:"
+#piece##%SEC-CI-HT-509#%
+#piece##%SEC-CI-HT-66#%
+#!/bin/sh
+cat /etc/release 
+showrev -p
+#piece##%SEC-CI-HT-66#%
+#piece##%SEC-CI-HT-52#%
+egrep -v "oracle|sybase|postgres|nobody|noaccess" /etc/passwd|awk -F: '($3>=100) {print $1":"$3}'
+echo "result="`egrep -v "oracle|sybase|postgres|nobody|noaccess" /etc/passwd|awk -F: '($3>=100) {print $1":"$3}'|wc -l`
+#piece##%SEC-CI-HT-52#%
+#piece##%SEC-CI-HT-506#%
+cat /etc/hosts.allow |sed '/^#/d'|sed '/^$/d'|egrep -i "sshd|telnet|all"|egrep -v "all:all"
+cat /etc/hosts.deny |sed '/^#/d'|sed '/^$/d'|egrep -i "sshd|telnet|all"
+echo "allowno="`egrep -i "sshd|telnet|all" /etc/hosts.allow |egrep -v "all:all"|sed '/^#/d'|sed '/^$/d'|wc -l`;
+echo "denyno="`egrep -i "ssh|telnet|all" /etc/hosts.deny |sed '/^#/d'|sed '/^$/d'|wc -l`;
+#piece##%SEC-CI-HT-506#%
+#piece##%SEC-CI-HT-65#%
+#!/bin/sh
+netstat -an|egrep "*.22|*.23"
+svcs -a | grep ssh
+svcs -a | grep telnet
+echo "telnet_status="`netstat -an|grep "*.23>"|wc -l`;
+echo "ssh_status="`netstat -an|grep "*.22>"|wc -l`
+#piece##%SEC-CI-HT-65#%
+#piece##%SEC-CI-HT-500#%
+egrep -v "oracle|sybase|postgres|daemon|nobody|noaccess" /etc/passwd|awk -F: '($4>=100 || $4==1) {print $1":"$4}'
+echo "result="`egrep -v "oracle|sybase|postgres|daemon|nobody|noaccess" /etc/passwd|awk -F: '($4>=100 || $4==1) {print $1":"$4}'|wc -l`;
+#piece##%SEC-CI-HT-500#%
+#piece##%SEC-CI-HT-511#%
+/usr/sbin/eeprom|grep "security-mode"
+#piece##%SEC-CI-HT-511#%
+#piece##%SEC-CI-HT-59#%SEC-CI-HT-60#%SEC-CI-HT-58#%
+#!/bin/sh
+cat /etc/default/passwd|sed '/^#/d' |sed '/^$/d'
+COUNT=0
+for NO in `egrep "^MINALPHA|^MINNONALPHA|^MINUPPER|^MINLOWER|^MINSPECIAL|^MINDIGIT" /etc/default/passwd|cut -d\= -f2`;
+ do
+ if [ x"$NO" != "x0" ]; then COUNT=`expr $COUNT + 1`;
+ fi;
+ done
+echo "TOTAL_COUNT=$COUNT"
+#piece##%SEC-CI-HT-59#%SEC-CI-HT-60#%SEC-CI-HT-58#%
+#piece##%SEC-CI-HT-512#%
+grep "^server" /etc/inet/ntp.conf|grep -v "127.127.1.0"
+echo "ntpstatus="`ps -ef |grep xntpd|grep -v "grep xntpd"|wc -l`;
+echo "ntpserverno="`grep "^server" /etc/inet/ntp.conf|grep -v "127.127.1.0"|wc -l`;
+echo "ntpservernocluster="`grep "^server" /etc/inet/ntp.conf.cluster|grep -v "127.127.1.0"|wc -l`;
+#piece##%SEC-CI-HT-512#%
+#piece##%SEC-CI-HT-64#%
+ls -l /var/adm/messages;
+ls -l /var/adm/utmpx;
+ls -l /var/adm/wtmpx;
+ls -l /var/adm/sulog
+#piece##%SEC-CI-HT-64#%
+#piece##%SEC-CI-HT-503#%SEC-CI-HT-504#%SEC-CI-HT-62#%
+cat /etc/syslog.conf |sed '/^#/d'|sed '/^$/d'|awk '($2!~/\*/ && $2!~/-/) {printf $1"\t\t"$2"\n"}'
+cat /etc/default/login |sed '/^#/d'|sed '/^$/d'
+#piece##%SEC-CI-HT-503#%SEC-CI-HT-504#%SEC-CI-HT-62#%
+
+#piece##%SEC-CI-HT-513#%
+#!/bin/sh
+ps -ef |grep nfs|egrep "lockd|statd|nfsd|mountd"|egrep -v "egrep|grep"
+NFSSTATUS=`ps -ef |grep nfs|egrep "lockd|statd|nfsd|mountd"|egrep -v "egrep|grep"|wc -l`;
+NFSAllowNo=`egrep -i "nfs" /etc/hosts.allow |sed '/^#/d'|sed '/^$/d'|wc -l`;
+if [ $NFSSTATUS = 0 ];
+ then chkresult=true;
+ echo "NFS services online:$NFSSTATUS\nNumbers in hosts.allow:$NFSAllowNo\nNFS check result:$chkresult";
+ else        if [ $NFSAllowNo != 0 ];
+ then chkresult=true;
+ echo "NFS services online:$NFSSTATUS\nNumbers in hosts.allow:$NFSAllowNo\nNFS check result:$chkresult";
+ else chkresult=false;
+ echo "NFS services online:$NFSSTATUS\nNumbers in hosts.allow:$NFSAllowNo\nNFS check result:$chkresult";
+ fi;
+ fi
+unset NFSSTATUS NFSAllowNo
+#piece##%SEC-CI-HT-513#%
+#piece##%SEC-CI-HT-505#%
+cat /etc/default/su |sed '/^#/d' |sed '/^$/d'
+#piece##%SEC-CI-HT-505#%
+#piece##%SEC-CI-HT-74#%
+egrep "noexec_user_stack|noexec_user_stack_logt" /etc/system
+#piece##%SEC-CI-HT-74#%
+#piece##%SEC-CI-HT-507#%SEC-CI-HT-508#%
+echo "ip_ignore_redirect="`ndd -get /dev/ip ip_ignore_redirect`
+echo "ip6_ignore_redirect="`ndd -get /dev/ip ip6_ignore_redirect`
+echo "ip_send_redirects="`ndd -get /dev/ip ip_send_redirects`
+echo "ip6_send_redirects="`ndd -get /dev/ip ip6_send_redirects`
+echo "ip_forwarding="`ndd -get /dev/ip ip_forwarding`
+echo "ip_strict_dst_multihoming="`ndd -get /dev/ip ip_strict_dst_multihoming`
+echo "ip_forward_directed_broadcasts="`ndd -get /dev/ip ip_forward_directed_broadcasts`
+echo "ip_forward_src_routed="`ndd -get /dev/ip ip_forward_src_routed`
+#piece##%SEC-CI-HT-507#%SEC-CI-HT-508#%
+
+
+#piece##%SEC-CI-HT-56#%
+grep -i "^UMASK" /etc/default/login /etc/.login /etc/profile
+#piece##%SEC-CI-HT-56#%
+#piece##%SEC-CI-HT-510#%
+ls -l /etc/init.d/*|egrep "^-"|egrep -v "^-\S{1,3}------|^-\S{1,3}--x---|^-\S{1,3}r-----|^-\S{1,3}r-x---|^-rwxr-x---";
+echo "result="`ls -l /etc/init.d/*|egrep "^-"|egrep -v "^-\S{1,3}------|^-\S{1,3}--x---|^-\S{1,3}r-----|^-\S{1,3}r-x---|^-rwxr-x---"|wc -l`;
+#piece##%SEC-CI-HT-510#%
+#piece##%SEC-CI-HT-55#%
+ls -l /etc/passwd /etc/shadow /etc/group
+#piece##%SEC-CI-HT-55#%
+#piece##%SEC-CI-HT-53#%
+egrep "^listen:|^gdm:|^webservd:|^nobody:|^nobody4:|^noaccess:" /etc/shadow|awk -F: '($2!~/\*LK\*/) {print $1":"$2}'
+egrep "^listen:|^gdm:|^webservd:|^nobody:|^nobody4:|^noaccess:" /etc/passwd|awk -F: '($7!="/bin/false") {print $1":"$7}'
+egrep "^daemon:|^bin:|^sys:|^adm:|^lp:|^uucp:|^nuucp:|^smmsp:" /etc/shadow|awk -F: '($2!~/NP/) {print $1":"$2}'
+echo "result="`egrep "^listen:|^gdm:|^webservd:|^nobody:|^nobody4:|^noaccess:" /etc/shadow|awk -F: '($2!~/\*LK\*/) {print $1":"$2}'|wc -l`
+echo "result="`egrep "^listen:|^gdm:|^webservd:|^nobody:|^nobody4:|^noaccess:" /etc/passwd|awk -F: '($7!="/bin/false") {print $1":"$7}'|wc -l`
+echo "result="`egrep "^daemon:|^bin:|^sys:|^adm:|^lp:|^uucp:|^nuucp:|^smmsp:" /etc/shadow|awk -F: '($2!~/NP/) {print $1":"$2}'|wc -l`
+#piece##%SEC-CI-HT-53#%
+#piece##%SEC-CI-HT-57#%
+#!/bin/sh
+FTPSTATUS=`netstat -an -P tcp|grep -i listen|grep "*.21>"|wc -l`
+if ([ `uname -r|cut -d. -f2` = 8 ]);
+ then   FTPACCESS="/etc/ftpaccess";
+ FTPUSERS="/etc/ftpusers" ;
+ else  FTPACCESS="/etc/ftpd/ftpaccess";
+ FTPUSERS="/etc/ftpd/ftpusers";
+ fi
+Check_ftpusers ()
+{
+ COUNT=0
+ for user in root daemon bin sys adm lp uucp nuucp listen nobody noaccess nobody4
+ do grep -w "${user}" $FTPUSERS >/dev/null 2>&1;
+ if [ $? != 0 ]; then echo "User ${user} not in /etc/ftpd/ftpusers.";
+ else COUNT=`expr $COUNT + 1`;
+ fi;
+ done;
+ if [ x"$COUNT" != "x12" ];
+ then echo "FTP check result:false";
+ else Check_ftpaccess;
+ fi
+ }
+Check_ftpaccess ()  {
+ chk_result2=`egrep "^chmod|^delete|^overwrite|^rename|^umask" $FTPACCESS|grep "anonymous"|grep no|wc -l`;
+ if [ $chk_result2 -ge 5 ];
+ then echo "FTP check result:true";
+ else echo "FTP check result:false";
+ fi
+ }
+if [ $FTPSTATUS = 0 ];
+ then echo "FTP is not running.";
+ echo "Number of users not in ftpusers:0.FTP check result:true";
+ else Check_ftpusers;
+ fi
+unset FTPSTATUS FTPACCESS FTPUSERS COUNT
+#piece##%SEC-CI-HT-57#%
+#piece##%SEC-CI-HT-501#%
+#!/bin/sh
+FTPSTATUS=`netstat -an -P tcp|grep -i listen|grep "*.21\>"|wc -l`;
+svcs |grep ftp
+echo "FTPSTATUS="$FTPSTATUS
+cat /etc/ftpd/ftpaccess |grep -v "^#"|grep restricted-uid
+if [ $FTPSTATUS = 0 ];
+ then echo "FTP is not running.";
+ echo "FTP check result:true";
+fi
+#piece##%SEC-CI-HT-501#%
+#piece##%SEC-CI-HT-54#%
+#!/bin/sh
+if ([ `uname -r|cut -d\. -f2` = 8 ]);
+then SSHD_CONF="/usr/local/etc/sshd_config";
+else SSHD_CONF="/etc/ssh/sshd_config";
+fi
+if ([ -f $SSHD_CONF ]);
+then    if ([ `grep "^PermitRootLogin no" $SSHD_CONF|wc -l` = 1 ]);
+then echo "result1="`grep "^CONSOLE=/dev/console" /etc/default/login|wc -l`;
+echo "result2= 1";
+else echo "result1="`grep "^CONSOLE=/dev/console" /etc/default/login|wc -l`;
+echo "result2= 0";
+fi;
+else echo "result1="`grep "^CONSOLE=/dev/console" /etc/default/login|wc -l`;
+echo "result2= 1";
+fi
+unset SSHD_CONF
+#piece##%SEC-CI-HT-54#%
+
+#piece##%SEC-CI-HT-515#%
+env x='() { :;}; echo vulnerable' bash -c "echo this is a test" 
+#piece##%SEC-CI-HT-515#%
+
+#piece##%SEC-CI-HT-68#%
+cat /etc/motd 
+#piece##%SEC-CI-HT-68#%
+#piece##%SEC-CI-HT-71#%
+#!/bin/sh
+FTPSTATUS=`netstat -antp|grep -i "listen"|grep ":21\>"|wc -l`
+function Check_vsftpd
+{
+if [ -f /etc/vsftpd.conf ];
+    then FTPCONF="/etc/vsftpd.conf";
+        elif [ -f /etc/vsftpd/vsftpd.conf ];
+        then FTPCONF="/etc/vsftpd/vsftpd.conf";
+fi;
+cat $FTPCONF|egrep -v "^#|^$"
+if [ `grep -v "^#" $FTPCONF|grep -i "ftpd_banner"|wc -l` -ne 0 ];
+   then  echo "vsftpd is running.Banner in $FTPCONF is recommended.FTP check result:true.";
+   else  echo "vsftpd is running.Banner in $FTPCONF is not recommended.FTP check result:false.";
+fi;
+unset FTPCONF;
+}
+function Check_pureftpd
+{
+cat /etc/pure-ftpd/pure-ftpd.conf|egrep -v "^#|^$"
+if [ `grep -v "^#" /etc/pure-ftpd/pure-ftpd.conf|grep -i "FortunesFile"|wc -l` -eq 0 ];
+   then echo "pure-ftpd is running.banner in pure-ftpd.conf is not recommended.FTP check result:false.";
+   else if [ -s `grep -v "^$" /etc/pure-ftpd/pure-ftpd.conf|grep -i fortunes|awk '{print $2}'` ];
+            then echo "pure-ftpd is running.Banner in pure-ftpd.conf is recommended.FTP check result:true.";
+            else echo "pure-ftpd is running.Banner in pure-ftpd.conf is not recommended.FTP check result:false.";
+        fi;
+fi;
+}
+if [ $FTPSTATUS = 0 ];
+     then  echo "FTP is not running.FTP check result:true.";
+     else  if ([ `ps -ef|grep vsftpd|grep -v "grep"|wc -l` -ne 0 ] || [ `chkconfig --list |grep vsftp|grep -v "0:"|grep -w on|wc -l` -ne 0 ]);
+              then Check_vsftpd;
+              else Check_pureftpd;
+           fi;
+fi
+unset FTPSTATUS;
+#piece##%SEC-CI-HT-71#%
+#piece##%SEC-CI-HT-73#%
+#!/bin/sh
+NUMBER=0;
+for DIR in `cut -d":" -f6 /etc/passwd`;
+do if [ -e $DIR/.netrc ];
+then echo "$DIR/.netrc";NUMBER=`expr $NUMBER + 1`;
+fi;
+done
+echo "result="$NUMBER
+unset NUMBER
+#piece##%SEC-CI-HT-73#%

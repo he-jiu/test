@@ -1,0 +1,142 @@
+equipment_type=HOST_WINDOWS
+#equipment_name#
+hostname
+#equipment_name#
+#equipment_ip#
+ipconfig
+#equipment_ip#
+
+
+
+cm_item_code=#%SEC-CI-HT-01#%SEC-CI-HT-03#%SEC-CI-HT-05#%
+cm_item_code=#%SEC-CI-HT-02#%
+cm_item_code=#%SEC-CI-HT-12#%
+cm_item_code=#%SEC-CI-HT-13#%
+cm_item_code=#%SEC-CI-HT-14#%
+cm_item_code=#%SEC-CI-HT-16#%
+cm_item_code=#%SEC-CI-HT-17#%
+cm_item_code=#%SEC-CI-HT-18#%
+cm_item_code=#%SEC-CI-HT-19#%
+cm_item_code=#%SEC-CI-HT-21#%
+cm_item_code=#%SEC-CI-HT-22#%
+cm_item_code=#%SEC-CI-HT-23#%
+cm_item_code=#%SEC-CI-HT-24#%
+cm_item_code=#%SEC-CI-HT-28#%
+cm_item_code=#%SEC-CI-HT-26#%SEC-CI-HT-08#%SEC-CI-HT-07#%SEC-CI-HT-25#%SEC-CI-HT-09#%SEC-CI-HT-10#%SEC-CI-HT-15#%SEC-CI-HT-27#%SEC-CI-HT-06#%SEC-CI-HT-04#%
+
+
+
+
+
+cm_item_code=#%SEC-CI-HT-220#%
+cm_item_code=#%SEC-CI-HT-221#%
+cm_item_code=#%SEC-CI-HT-222#%
+cm_item_code=#%SEC-CI-HT-223#%
+cm_item_code=#%SEC-CI-HT-224#%
+cm_item_code=#%SEC-CI-HT-225#%
+cm_item_code=#%SEC-CI-HT-226#%
+cm_item_code=#%SEC-CI-HT-227#%
+cm_item_code=#%SEC-CI-HT-228#%
+cm_item_code=#%SEC-CI-HT-229#%
+cm_item_code=#%SEC-CI-HT-230#%
+cm_item_code=#%SEC-CI-HT-231#%
+cm_item_code=#%SEC-CI-HT-232#%
+cm_item_code=#%SEC-CI-HT-233#%
+cm_item_code=#%SEC-CI-HT-234#%
+cm_item_code=#%SEC-CI-HT-235#%
+cm_item_code=#%SEC-CI-HT-236#%
+cm_item_code=#%SEC-CI-HT-237#%
+
+
+
+
+#%SEC-CI-HT-01#%SEC-CI-HT-03#%SEC-CI-HT-05#%
+chcp 936
+net localgroup administrators|findstr /V "^$ ^别名 ^注释 ^- ^成员 ^命令成功完成 ^Alias ^Comment ^Members ^- ^The command completed successfully"|find /v /n "::"
+#%SEC-CI-HT-01#%SEC-CI-HT-03#%SEC-CI-HT-05#%
+#%SEC-CI-HT-02#%
+chcp 65001
+net user guest|findstr /r "Account active 帐户启用"
+#%SEC-CI-HT-02#%
+#%SEC-CI-HT-18#%
+reg query "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP\Parameters\ValidCommunities"
+#%SEC-CI-HT-18#%
+#%SEC-CI-HT-26#%SEC-CI-HT-08#%SEC-CI-HT-07#%SEC-CI-HT-25#%SEC-CI-HT-09#%SEC-CI-HT-10#%SEC-CI-HT-15#%SEC-CI-HT-27#%SEC-CI-HT-06#%SEC-CI-HT-04#%
+secedit /export /cfg sec.inf /quiet
+type sec.inf
+del sec.inf
+#%SEC-CI-HT-26#%SEC-CI-HT-08#%SEC-CI-HT-07#%SEC-CI-HT-25#%SEC-CI-HT-09#%SEC-CI-HT-10#%SEC-CI-HT-15#%SEC-CI-HT-27#%SEC-CI-HT-06#%SEC-CI-HT-04#%
+#%SEC-CI-HT-28#%
+reg query "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\\AutoLogonChecked"
+reg query "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\services\\Tcpip\\Parameters"|findstr /I "DisableIPSourceRouting EnablePMTUDiscovery"
+reg query "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Lsa"|findstr /I "restrictanonymous"
+reg query "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\services"|findstr /I "TcpMaxPortsExhausted TcpMaxHalfOpen TcpMaxHalfOpenRetried"
+#%SEC-CI-HT-28#%
+#%SEC-CI-HT-17#%
+wmic NICCONFIG get IPAddress,IPEnabled,IPFilterSecurityEnabled,IPSecPermitIPProtocols,IPSecPermitTCPPorts,IPSecPermitUDPPorts|findstr "TRUE IPAddress"
+#%SEC-CI-HT-17#%
+#%SEC-CI-HT-12#%
+netsh firewall show state
+#%SEC-CI-HT-12#%
+#%SEC-CI-HT-16#%
+wmic nteventlog get Caption,FileSize,MaxFileSize,OverWritePolicy,OverwriteOutDated
+#%SEC-CI-HT-16#%
+#%SEC-CI-HT-23#%
+FOR /F %i IN ('wmic share get Path') DO @CACLS %i
+#%SEC-CI-HT-23#%
+#%SEC-CI-HT-21#%
+reg query HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer | find "NoDriveTypeAutoRun"
+#%SEC-CI-HT-21#%
+
+
+
+
+#%SEC-CI-HT-220#%SEC-CI-HT-222#%
+chcp 437
+(systeminfo || wmic os get Caption,CSDVersion,ServicePackMajorVersion,ServicePackMinorVersion)|findstr /r "^OS 修补程序 Hotfix(s) KB Service Pack"
+#%SEC-CI-HT-220#%SEC-CI-HT-222#%
+#%SEC-CI-HT-221#%
+wmic NICCONFIG get IPAddress,IPEnabled,IPFilterSecurityEnabled,IPSecPermitIPProtocols,IPSecPermitTCPPorts,IPSecPermitUDPPorts|findstr "TRUE IPAddress"
+#%SEC-CI-HT-221#%
+#%SEC-CI-HT-223#%
+secedit /export /cfg sec.inf /quiet
+type sec.inf
+del sec.inf
+#%SEC-CI-HT-223#%
+#%SEC-CI-HT-224#%
+secedit /export /cfg sec_EventAudit.inf
+type sec_EventAudit.inf|findstr "^Audit"
+del sec_EventAudit.inf
+#%SEC-CI-HT-224#%
+#%SEC-CI-HT-225#%
+net localgroup|find "*" |findstr /n "*"
+#%SEC-CI-HT-225#%
+#%SEC-CI-HT-226#%
+net time /QUERYSNTP
+#%SEC-CI-HT-226#%
+#%SEC-CI-HT-227#%
+wmic nteventlog get Caption,FileSize,MaxFileSize,OverWritePolicy,OverwriteOutDated
+#%SEC-CI-HT-227#%
+#%SEC-CI-HT-228#%
+wmic OS Get DataExecutionPrevention_SupportPolicy
+bootcfg
+#%SEC-CI-HT-228#%
+#%SEC-CI-HT-229#%
+reg query "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters"|findstr /I "SynAttackProtect TcpMaxPortsExhausted TcpMaxHalfOpen TcpMaxHalfOpenRetried"
+#%SEC-CI-HT-229#%
+#%SEC-CI-HT-230#%
+wmic DESKTOP get Name,ScreenSaverSecure,ScreenSaverTimeout |findstr /v /b NT.* | findstr /v \\.DEFAULT | findstr /v postgres
+#%SEC-CI-HT-230#%
+#%SEC-CI-HT-231#%
+reg query "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\InetStp" /v "VersionString"
+#%SEC-CI-HT-231#%
+#%SEC-CI-HT-232#%SEC-CI-HT-233#%SEC-CI-HT-235#%SEC-CI-HT-236#%SEC-CI-HT-237#%
+secedit /export /cfg sec.inf /quiet
+type sec.inf
+del sec.inf
+#%SEC-CI-HT-232#%SEC-CI-HT-233#%SEC-CI-HT-235#%SEC-CI-HT-236#%SEC-CI-HT-237#%
+#%SEC-CI-HT-234#%
+wmic DESKTOP get Name,ScreenSaverSecure,ScreenSaverTimeout |findstr /v /b NT.* | findstr /v \\.DEFAULT | findstr /v postgres
+#%SEC-CI-HT-234#%
+
+
